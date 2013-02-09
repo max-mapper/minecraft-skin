@@ -12,6 +12,7 @@ function Skin(three, image, sizeRatio) {
 	this.charMaterialTrans = this.getMaterial(this.skin, true)
   if (typeof image === "string") this.fetchImage(image)
   if (typeof image === "object") this.setImage(image)
+  this.mesh = this.createPlayerObject();
 }
 
 Skin.prototype.createCanvases = function() {
@@ -178,6 +179,14 @@ Skin.prototype.cubeFromPlanes = function (size, mat) {
 	return cube;
 }
 
+//exporting these meshes for manipulation:
+//leftLeg
+//rightLeg
+//leftArm
+//rightArm
+//body
+//head
+
 Skin.prototype.createPlayerObject = function(scene) {
   var headgroup = new THREE.Object3D();
 	var upperbody = new THREE.Object3D();
@@ -187,7 +196,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	for(var i=0; i < 8; i+=1) {
 		leftleggeo.vertices[i].y -= 6;
 	}
-	var leftleg = new THREE.Mesh(leftleggeo, this.charMaterial);
+	var leftleg = this.leftLeg = new THREE.Mesh(leftleggeo, this.charMaterial);
 	leftleg.position.z = -2;
 	leftleg.position.y = -6;
 	this.UVMap(leftleg, 0, 8, 20, -4, 12);
@@ -202,7 +211,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	for(var i=0; i < 8; i+=1) {
 		rightleggeo.vertices[i].y -= 6;
 	}
-	var rightleg = new THREE.Mesh(rightleggeo, this.charMaterial);
+	var rightleg = this.rightLeg =new THREE.Mesh(rightleggeo, this.charMaterial);
 	rightleg.position.z = 2;
 	rightleg.position.y = -6;
   this.UVMap(rightleg, 0, 4, 20, 4, 12);
@@ -214,7 +223,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	
 	// Body
 	var bodygeo = new THREE.CubeGeometry(4, 12, 8);
-	var bodymesh = new THREE.Mesh(bodygeo, this.charMaterial);
+	var bodymesh = this.body = new THREE.Mesh(bodygeo, this.charMaterial);
 	this.UVMap(bodymesh, 0, 20, 20, 8, 12);
 	this.UVMap(bodymesh, 1, 32, 20, 8, 12);
 	this.UVMap(bodymesh, 2, 20, 16, 8, 4, 1);
@@ -229,7 +238,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	for(var i=0; i < 8; i+=1) {
 		leftarmgeo.vertices[i].y -= 4;
 	}
-	var leftarm = new THREE.Mesh(leftarmgeo, this.charMaterial);
+	var leftarm = this.leftArm = new THREE.Mesh(leftarmgeo, this.charMaterial);
 	leftarm.position.z = -6;
 	leftarm.position.y = 4;
 	leftarm.rotation.x = Math.PI/32;
@@ -246,7 +255,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	for(var i=0; i < 8; i+=1) {
 		rightarmgeo.vertices[i].y -= 4;
 	}
-	var rightarm = new THREE.Mesh(rightarmgeo, this.charMaterial);
+	var rightarm =this.rightArm = new THREE.Mesh(rightarmgeo, this.charMaterial);
 	rightarm.position.z = 6;
 	rightarm.position.y = 4;
 	rightarm.rotation.x = -Math.PI/32;
@@ -260,7 +269,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	
 	//Head
 	var headgeo = new THREE.CubeGeometry(8, 8, 8);
-	var headmesh = new THREE.Mesh(headgeo, this.charMaterial);
+	var headmesh = this.head = new THREE.Mesh(headgeo, this.charMaterial);
 	headmesh.position.y = 2;
 	this.UVMap(headmesh, 0, 8, 8, 8, 8);
 	this.UVMap(headmesh, 1, 24, 8, 8, 8);
