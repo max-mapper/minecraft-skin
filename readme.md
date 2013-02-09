@@ -8,9 +8,9 @@ minecraft is property of Mojang AB
 
 ```javascript
 var skin = require('minecraft-skin')
-var viking = skin(THREE, 'viking.png').createPlayerObject()
-viking.position.y = 50
-scene.add(viking)
+var viking = skin(THREE, 'viking.png')
+viking.mesh.position.y = 50
+scene.add(viking.mesh)
 ```
 
 designed for use with [browserify](http://browserify.org)
