@@ -279,7 +279,12 @@ Skin.prototype.createPlayerObject = function(scene) {
 	
 	this.UVMap(headmesh, 4, 0, 8, 8, 8);
 	this.UVMap(headmesh, 5, 16, 8, 8, 8);
-	headgroup.add(headmesh);
+
+	var unrotatedHeadMesh = new THREE.Object3D();
+	unrotatedHeadMesh.rotation.y = Math.PI / 2;
+	unrotatedHeadMesh.add(headmesh);
+
+	headgroup.add(unrotatedHeadMesh);
 
 	var helmet = this.cubeFromPlanes(9, this.charMaterialTrans);
 	helmet.position.y = 2;
@@ -328,12 +333,34 @@ Skin.prototype.createPlayerObject = function(scene) {
 	playerModel.add(rightleg);
 	
 	playerModel.add(upperbody);
-	playerModel.add(headgroup);
-	
+  
+	var playerRotation = new THREE.Object3D();
+	playerRotation.rotation.y = Math.PI / 2
+	playerRotation.position.y = 12
+	playerRotation.add(playerModel)
+
+	var rotatedHead = new THREE.Object3D();
+	rotatedHead.rotation.y = -Math.PI/2;
+	rotatedHead.add(headgroup);
+
+	playerModel.add(rotatedHead);
 	playerModel.position.y = 6;
 	
 	var playerGroup = new THREE.Object3D();
+	playerGroup.cameraInside = new THREE.Object3D()
+	playerGroup.cameraOutside = new THREE.Object3D()
+
+	playerGroup.cameraInside.position.x = 0;
+	playerGroup.cameraInside.position.y = 2;
+	playerGroup.cameraInside.position.z = 0; 
+
+	playerGroup.head = headgroup
+	headgroup.add(playerGroup.cameraInside)
+	playerGroup.cameraInside.add(playerGroup.cameraOutside)
+
+	playerGroup.cameraOutside.position.z = 100
+
 	
-	playerGroup.add(playerModel);
+	playerGroup.add(playerRotation);
 	return playerGroup
 }
