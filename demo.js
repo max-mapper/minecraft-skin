@@ -40,12 +40,20 @@ var isPaused = false;
 var isYfreezed = false;
 var isFunnyRunning = false;
 
+
+var skin = require('./')
+window.viking = skin(THREE, 'viking.png')
+scene.add(viking.createPlayerObject())
+
+var walk = require('./voxel-walk')
+
 var render = function () {
 	window.webkitRequestAnimationFrame(render, renderer.domElement);
 	var oldRad = rad;
 	
+	walk.render(viking, time)
 	var time = (Date.now() - startTime)/1000;
-	
+
 	if(!isMouseDown) {
 		//mouseX*=0.95;
 		if(!isYfreezed) {
@@ -71,9 +79,7 @@ var render = function () {
 	camera.lookAt(new THREE.Vector3(0, 1.5, 0));
 		
 	renderer.render(scene, camera);
+
 };
 
 render()
-var skin = require('./')
-var viking = skin(THREE, 'viking.png')
-scene.add(viking.createPlayerObject())

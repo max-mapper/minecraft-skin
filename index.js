@@ -186,10 +186,11 @@ Skin.prototype.cubeFromPlanes = function (size, mat) {
 //rightArm
 //body
 //head
+//upperBody
 
 Skin.prototype.createPlayerObject = function(scene) {
   var headgroup = new THREE.Object3D();
-	var upperbody = new THREE.Object3D();
+	var upperbody = this.upperBody = new THREE.Object3D();
 	
 	// Left leg
 	var leftleggeo = new THREE.CubeGeometry(4, 12, 4);
@@ -279,12 +280,7 @@ Skin.prototype.createPlayerObject = function(scene) {
 	
 	this.UVMap(headmesh, 4, 0, 8, 8, 8);
 	this.UVMap(headmesh, 5, 16, 8, 8, 8);
-
-	var unrotatedHeadMesh = new THREE.Object3D();
-	unrotatedHeadMesh.rotation.y = Math.PI / 2;
-	unrotatedHeadMesh.add(headmesh);
-
-	headgroup.add(unrotatedHeadMesh);
+	headgroup.add(headmesh);
 
 	var helmet = this.cubeFromPlanes(9, this.charMaterialTrans);
 	helmet.position.y = 2;
@@ -326,41 +322,18 @@ Skin.prototype.createPlayerObject = function(scene) {
 	
 	headgroup.add(ears);
 	headgroup.position.y = 8;
+	upperbody.add(headgroup)
 	
-	var playerModel = new THREE.Object3D();
+	var playerModel = this.playerModel = new THREE.Object3D();
 	
 	playerModel.add(leftleg);
 	playerModel.add(rightleg);
-	
 	playerModel.add(upperbody);
-  
-	var playerRotation = new THREE.Object3D();
-	playerRotation.rotation.y = Math.PI / 2
-	playerRotation.position.y = 12
-	playerRotation.add(playerModel)
-
-	var rotatedHead = new THREE.Object3D();
-	rotatedHead.rotation.y = -Math.PI/2;
-	rotatedHead.add(headgroup);
-
-	playerModel.add(rotatedHead);
+	
 	playerModel.position.y = 6;
 	
-	var playerGroup = new THREE.Object3D();
-	playerGroup.cameraInside = new THREE.Object3D()
-	playerGroup.cameraOutside = new THREE.Object3D()
-
-	playerGroup.cameraInside.position.x = 0;
-	playerGroup.cameraInside.position.y = 2;
-	playerGroup.cameraInside.position.z = 0; 
-
-	playerGroup.head = headgroup
-	headgroup.add(playerGroup.cameraInside)
-	playerGroup.cameraInside.add(playerGroup.cameraOutside)
-
-	playerGroup.cameraOutside.position.z = 100
-
+	var playerGroup = this.playerGroup = new THREE.Object3D();
 	
-	playerGroup.add(playerRotation);
+	playerGroup.add(playerModel);
 	return playerGroup
 }
