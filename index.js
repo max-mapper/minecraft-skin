@@ -105,9 +105,7 @@ Skin.prototype.setImage = function (skin) {
 	
   this.charMaterial.map.needsUpdate = true;
   this.charMaterialTrans.map.needsUpdate = true;
-  
-  document.body.appendChild(this.skinBig);
-	
+  	
 };
 
 Skin.prototype.getMaterial = function(img, transparent) {

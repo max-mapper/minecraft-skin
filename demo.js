@@ -45,7 +45,7 @@ var skin = require('./')
 window.viking = skin(THREE, 'viking.png')
 scene.add(viking.createPlayerObject())
 
-var walk = require('./voxel-walk')
+var walk = require('voxel-walk')
 
 var render = function () {
 	window.webkitRequestAnimationFrame(render, renderer.domElement);
