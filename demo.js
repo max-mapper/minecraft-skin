@@ -43,7 +43,7 @@ var isFunnyRunning = false;
 
 var skin = require('./')
 window.viking = skin(THREE, 'viking.png')
-scene.add(viking.createPlayerObject())
+scene.add(viking.mesh)
 
 var walk = require('voxel-walk')
 

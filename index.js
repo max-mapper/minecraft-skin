@@ -1,18 +1,23 @@
 var THREE
 
-module.exports = function(three, image, sizeRatio) {
-  return new Skin(three, image, sizeRatio)
+module.exports = function(three, image, opts) {
+  return new Skin(three, image, opts)
 }
 
-function Skin(three, image, sizeRatio) {
+function Skin(three, image, opts) {
+  if (opts) opts.image = opts.image || image
+  else opts = { image: image }
+  if (typeof image === 'object' && !(image instanceof HTMLElement)) opts = image
   THREE = three // hack until three.js fixes multiple instantiation
-  this.sizeRatio = sizeRatio || 8
+  this.sizeRatio = opts.sizeRatio || 8
+  this.scale = opts.scale || new three.Vector3(1, 1, 1)
+  this.fallbackImage = opts.fallbackImage || 'skin.png'
   this.createCanvases()
   this.charMaterial = this.getMaterial(this.skin, false)
 	this.charMaterialTrans = this.getMaterial(this.skin, true)
-  if (typeof image === "string") this.fetchImage(image)
-  if (typeof image === "object") this.setImage(image)
-  this.mesh = this.createPlayerObject();
+  if (typeof opts.image === "string") this.fetchImage(opts.image)
+  if (opts.image instanceof HTMLElement) this.setImage(opts.image)
+  this.mesh = this.createPlayerObject()
 }
 
 Skin.prototype.createCanvases = function() {
@@ -328,10 +333,38 @@ Skin.prototype.createPlayerObject = function(scene) {
 	playerModel.add(rightleg);
 	playerModel.add(upperbody);
 	
-	playerModel.position.y = 6;
-	
 	var playerGroup = this.playerGroup = new THREE.Object3D();
 	
 	playerGroup.add(playerModel);
+	
+	var playerRotation = new THREE.Object3D();
+	playerRotation.rotation.y = Math.PI / 2
+	playerRotation.position.y = 12
+	playerRotation.add(playerModel)
+
+	var rotatedHead = new THREE.Object3D();
+	rotatedHead.rotation.y = -Math.PI / 2
+	rotatedHead.add(headgroup);
+
+	playerModel.add(rotatedHead);
+	playerModel.position.y = 6;
+
+	var playerGroup = new THREE.Object3D();
+	playerGroup.cameraInside = new THREE.Object3D()
+	playerGroup.cameraOutside = new THREE.Object3D()
+
+	playerGroup.cameraInside.position.x = 0;
+	playerGroup.cameraInside.position.y = 2;
+	playerGroup.cameraInside.position.z = 0; 
+
+	playerGroup.head = headgroup
+	headgroup.add(playerGroup.cameraInside)
+	playerGroup.cameraInside.add(playerGroup.cameraOutside)
+
+	playerGroup.cameraOutside.position.z = 100
+
+  playerGroup.add(playerRotation);
+
+	playerGroup.scale = this.scale
 	return playerGroup
 }
