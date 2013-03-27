@@ -1,6 +1,6 @@
 {
   "name": "minecraft-skin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "load minecraft skins as meshes in three.js applications",
   "author": {
     "name": "max ogden",
