@@ -35,6 +35,7 @@ Skin.prototype.createCanvases = function() {
 Skin.prototype.fetchImage = function(imageURL) {
   var self = this
   this.image = new Image()
+  this.image.crossOrigin = 'anonymous'
   this.image.src = imageURL
   this.image.onload = function() {
     self.setImage(self.image)
