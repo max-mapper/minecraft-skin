@@ -1,19 +1,21 @@
 {
   "name": "minecraft-skin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "load minecraft skins as meshes in three.js applications",
   "author": {
     "name": "max ogden",
     "email": "max@maxogden.com"
   },
   "devDependencies": {
-    "voxel-walk": "0.0.4"
+    "voxel-walk": "0.0.4",
+    "browserify": "~2.8.1",
+    "beefy": "0.0.11"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:maxogden/minecraft-skin.git"
   },
-  "engines": {
-    "node": "0.8.x"
+  "scripts": {
+    "start": "beefy demo.js"
   }
 }

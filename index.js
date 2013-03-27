@@ -1,7 +1,7 @@
 var THREE
 
-module.exports = function(three, image, opts) {
-  return new Skin(three, image, opts)
+module.exports = function(three, image, sizeRatio) {
+  return new Skin(three, image, sizeRatio)
 }
 
 function Skin(three, image, opts) {
@@ -14,7 +14,7 @@ function Skin(three, image, opts) {
   this.fallbackImage = opts.fallbackImage || 'skin.png'
   this.createCanvases()
   this.charMaterial = this.getMaterial(this.skin, false)
-  this.charMaterialTrans = this.getMaterial(this.skin, true)
+	this.charMaterialTrans = this.getMaterial(this.skin, true)
   if (typeof opts.image === "string") this.fetchImage(opts.image)
   if (opts.image instanceof HTMLElement) this.setImage(opts.image)
   this.mesh = this.createPlayerObject()
@@ -35,7 +35,6 @@ Skin.prototype.createCanvases = function() {
 Skin.prototype.fetchImage = function(imageURL) {
   var self = this
   this.image = new Image()
-  this.image.crossOrigin = 'anonymous'
   this.image.src = imageURL
   this.image.onload = function() {
     self.setImage(self.image)
@@ -111,7 +110,7 @@ Skin.prototype.setImage = function (skin) {
   
   this.charMaterial.map.needsUpdate = true;
   this.charMaterialTrans.map.needsUpdate = true;
-    
+  
 };
 
 Skin.prototype.getMaterial = function(img, transparent) {
@@ -190,11 +189,10 @@ Skin.prototype.cubeFromPlanes = function (size, mat) {
 //rightArm
 //body
 //head
-//upperBody
 
 Skin.prototype.createPlayerObject = function(scene) {
   var headgroup = new THREE.Object3D();
-  var upperbody = this.upperBody = new THREE.Object3D();
+  var upperbody = this.upperbody = new THREE.Object3D();
   
   // Left leg
   var leftleggeo = new THREE.CubeGeometry(4, 12, 4);
@@ -284,7 +282,12 @@ Skin.prototype.createPlayerObject = function(scene) {
   
   this.UVMap(headmesh, 4, 0, 8, 8, 8);
   this.UVMap(headmesh, 5, 16, 8, 8, 8);
-  headgroup.add(headmesh);
+
+  var unrotatedHeadMesh = new THREE.Object3D();
+  unrotatedHeadMesh.rotation.y = Math.PI / 2;
+  unrotatedHeadMesh.add(headmesh);
+
+  headgroup.add(unrotatedHeadMesh);
 
   var helmet = this.cubeFromPlanes(9, this.charMaterialTrans);
   helmet.position.y = 2;
@@ -326,17 +329,13 @@ Skin.prototype.createPlayerObject = function(scene) {
   
   headgroup.add(ears);
   headgroup.position.y = 8;
-  upperbody.add(headgroup)
   
   var playerModel = this.playerModel = new THREE.Object3D();
   
   playerModel.add(leftleg);
   playerModel.add(rightleg);
+  
   playerModel.add(upperbody);
-  
-  var playerGroup = this.playerGroup = new THREE.Object3D();
-  
-  playerGroup.add(playerModel);
   
   var playerRotation = new THREE.Object3D();
   playerRotation.rotation.y = Math.PI / 2
@@ -344,12 +343,12 @@ Skin.prototype.createPlayerObject = function(scene) {
   playerRotation.add(playerModel)
 
   var rotatedHead = new THREE.Object3D();
-  rotatedHead.rotation.y = -Math.PI / 2
+  rotatedHead.rotation.y = -Math.PI/2;
   rotatedHead.add(headgroup);
 
   playerModel.add(rotatedHead);
   playerModel.position.y = 6;
-
+  
   var playerGroup = new THREE.Object3D();
   playerGroup.cameraInside = new THREE.Object3D()
   playerGroup.cameraOutside = new THREE.Object3D()
@@ -364,8 +363,8 @@ Skin.prototype.createPlayerObject = function(scene) {
 
   playerGroup.cameraOutside.position.z = 100
 
+  
   playerGroup.add(playerRotation);
-
   playerGroup.scale = this.scale
   return playerGroup
 }
