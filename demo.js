@@ -1,4 +1,4 @@
-var cw = 500, ch = 500;
+var cw = 250, ch = 500;
 var camera = new THREE.PerspectiveCamera(55, cw / ch, 1, 1000);
 var scene = new THREE.Scene();
 scene.add(camera)
@@ -6,7 +6,7 @@ var renderer = new THREE.WebGLRenderer({
   antialias: true
 })
 renderer.setSize(cw, ch)
-renderer.setClearColorHex(0xBFD1E5, 1.0)
+renderer.setClearColorHex(0xFFFFFF, 1.0)
 renderer.clear()
 var threecanvas = renderer.domElement;
 document.body.appendChild(threecanvas);
@@ -51,7 +51,11 @@ var isFunnyRunning = false;
 
 
 var skin = require('./')
-window.viking = skin(THREE, 'viking.png')
+
+var pngURL = window.location.hash
+if (pngURL === '' || pngURL === '#') pngURL = 'viking.png'
+else pngURL = pngURL.substr(1, pngURL.length - 1)
+window.viking = skin(THREE, pngURL)
 scene.add(viking.mesh)
 
 var walk = require('voxel-walk')
@@ -64,7 +68,6 @@ var render = function () {
   var time = (Date.now() - startTime)/1000;
   
   if(!isMouseDown) {
-    //mouseX*=0.95;
     if(!isYfreezed) {
       mouseY*=0.97;
     }
@@ -88,7 +91,6 @@ var render = function () {
   camera.lookAt(new THREE.Vector3(0, 1.5, 0));
   
   renderer.render(scene, camera);
-
 };
 
 function renderStatic() {
@@ -100,4 +102,5 @@ function renderStatic() {
 }
 
 renderStatic()
-// render()
+
+document.querySelector('canvas').addEventListener('click', render)
