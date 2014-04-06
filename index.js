@@ -129,19 +129,25 @@ Skin.prototype.getMaterial = function(img, transparent) {
 
 Skin.prototype.UVMap = function(mesh, face, x, y, w, h, rotateBy) {
   if (!rotateBy) rotateBy = 0;
-  var uvs = mesh.geometry.faceVertexUvs[0][face];
+  var uvs = mesh.geometry.faceVertexUvs[0][face * 2];
   var tileU = x;
   var tileV = y;
   var tileUvWidth = 1/64;
   var tileUvHeight = 1/32;
-  uvs[ (0 + rotateBy) % 4 ].x = (tileU * tileUvWidth)
-  uvs[ (0 + rotateBy) % 4 ].y = 1 - (tileV * tileUvHeight)
-  uvs[ (1 + rotateBy) % 4 ].x = (tileU * tileUvWidth)
-  uvs[ (1 + rotateBy) % 4 ].y = 1 - (tileV * tileUvHeight + h * tileUvHeight)
-  uvs[ (2 + rotateBy) % 4 ].x = (tileU * tileUvWidth + w * tileUvWidth)
-  uvs[ (2 + rotateBy) % 4 ].y = 1 - (tileV * tileUvHeight + h * tileUvHeight)
-  uvs[ (3 + rotateBy) % 4 ].x = (tileU * tileUvWidth + w * tileUvWidth)
-  uvs[ (3 + rotateBy) % 4 ].y = 1 - (tileV * tileUvHeight)
+
+  var vA = (tileU * tileUvWidth), uA =  1 - (tileV * tileUvHeight);
+  var vB = (tileU * tileUvWidth), uB = 1 - (tileV * tileUvHeight + h * tileUvHeight);
+  var vC = (tileU * tileUvWidth + w * tileUvWidth), uC =  1 - (tileV * tileUvHeight + h * tileUvHeight);
+  var vD = (tileU * tileUvWidth + w * tileUvWidth), uD =  1 - (tileV * tileUvHeight);
+
+  uvs[ (0 + rotateBy) % 3 ].set(vA, uA);
+  uvs[ (1 + rotateBy) % 3 ].set(vB, uB);
+  uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
+
+  uvs = mesh.geometry.faceVertexUvs[0][face * 2 + 1];
+  uvs[ (0 + rotateBy) % 3 ].set(vB, uB);
+  uvs[ (1 + rotateBy) % 3 ].set(vC, uC);
+  uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
 }
 
 Skin.prototype.cubeFromPlanes = function (size, mat) {

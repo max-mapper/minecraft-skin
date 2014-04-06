@@ -11,7 +11,7 @@
     "voxel-walk": "0.0.5",
     "browserify": "~2.8.1",
     "beefy": "0.0.11",
-    "three": "0.58.10"
+    "three": "0.66.2"
   },
   "repository": {
     "type": "git",
