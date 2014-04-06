@@ -50,7 +50,7 @@ var isYfreezed = false;
 var isFunnyRunning = false;
 
 
-var skin = require('./')
+var skin = require('../')
 
 var pngURL = window.location.hash
 if (pngURL === '' || pngURL === '#') pngURL = 'viking.png'
