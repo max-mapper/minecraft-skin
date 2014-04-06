@@ -129,7 +129,6 @@ Skin.prototype.getMaterial = function(img, transparent) {
 
 Skin.prototype.UVMap = function(mesh, face, x, y, w, h, rotateBy) {
   if (!rotateBy) rotateBy = 0;
-  var uvs = mesh.geometry.faceVertexUvs[0][face * 2];
   var tileU = x;
   var tileV = y;
   var tileUvWidth = 1/64;
@@ -140,14 +139,26 @@ Skin.prototype.UVMap = function(mesh, face, x, y, w, h, rotateBy) {
   var vC = (tileU * tileUvWidth + w * tileUvWidth), uC =  1 - (tileV * tileUvHeight + h * tileUvHeight);
   var vD = (tileU * tileUvWidth + w * tileUvWidth), uD =  1 - (tileV * tileUvHeight);
 
-  uvs[ (0 + rotateBy) % 3 ].set(vA, uA);
-  uvs[ (1 + rotateBy) % 3 ].set(vB, uB);
-  uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
+  if (THREE.BoxGeometry) {
+    // three.js r66, boxes (cubes) built from triangles
+    var uvs = mesh.geometry.faceVertexUvs[0][face * 2];
+    uvs[ (0 + rotateBy) % 3 ].set(vA, uA);
+    uvs[ (1 + rotateBy) % 3 ].set(vB, uB);
+    uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
 
-  uvs = mesh.geometry.faceVertexUvs[0][face * 2 + 1];
-  uvs[ (0 + rotateBy) % 3 ].set(vB, uB);
-  uvs[ (1 + rotateBy) % 3 ].set(vC, uC);
-  uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
+    uvs = mesh.geometry.faceVertexUvs[0][face * 2 + 1];
+    uvs[ (0 + rotateBy) % 3 ].set(vB, uB);
+    uvs[ (1 + rotateBy) % 3 ].set(vC, uC);
+    uvs[ (2 + rotateBy) % 3 ].set(vD, uD);
+  } else {
+    // three.js r58, cubes built from quads
+    var uvs = mesh.geometry.faceVertexUvs[0][face];
+
+    uvs[ (0 + rotateBy) % 4 ].set(vA, uA);
+    uvs[ (1 + rotateBy) % 4 ].set(vB, uB);
+    uvs[ (2 + rotateBy) % 4 ].set(vC, uC);
+    uvs[ (3 + rotateBy) % 4 ].set(vD, uD);
+  }
 }
 
 Skin.prototype.cubeFromPlanes = function (size, mat) {
