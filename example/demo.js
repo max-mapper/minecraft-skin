@@ -9,7 +9,7 @@ var renderer = new THREE.WebGLRenderer({
   antialias: true
 })
 renderer.setSize(cw, ch)
-renderer.setClearColorHex(0xFFFFFF, 1.0)
+renderer.setClearColor(0xFFFFFF, 1.0)
 renderer.clear()
 var threecanvas = renderer.domElement;
 document.body.appendChild(threecanvas);
