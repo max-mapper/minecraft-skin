@@ -1,3 +1,6 @@
+
+var THREE = require('three');
+
 var cw = 250, ch = 500;
 var camera = new THREE.PerspectiveCamera(55, cw / ch, 1, 1000);
 var scene = new THREE.Scene();
@@ -6,7 +9,7 @@ var renderer = new THREE.WebGLRenderer({
   antialias: true
 })
 renderer.setSize(cw, ch)
-renderer.setClearColorHex(0xFFFFFF, 1.0)
+renderer.setClearColor(0xFFFFFF, 1.0)
 renderer.clear()
 var threecanvas = renderer.domElement;
 document.body.appendChild(threecanvas);
@@ -50,7 +53,7 @@ var isYfreezed = false;
 var isFunnyRunning = false;
 
 
-var skin = require('./')
+var skin = require('../')
 
 var pngURL = window.location.hash
 if (pngURL === '' || pngURL === '#') pngURL = 'viking.png'
